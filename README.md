@@ -242,3 +242,4 @@ and payment is processed
 
 ## TODO:
 - [ ] add loki/tempo/zipkin for traces/spans
+- [ ] add build and test scripts
