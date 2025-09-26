@@ -1,11 +1,13 @@
 package com.saga.order.dto;
 
 
+import java.math.BigDecimal;
+
 public class OrderRequest {
     private String customerId;
     private String productId;
     private int quantity;
-    private double amount;
+    private BigDecimal amount;
 
     // Getters and Setters
     public String getCustomerId() { return customerId; }
@@ -17,7 +19,7 @@ public class OrderRequest {
     public int getQuantity() { return quantity; }
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public double getAmount() { return amount; }
-    public void setAmount(double amount) { this.amount = amount; }
+    public BigDecimal getAmount() { return amount; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
 }
 
