@@ -8,9 +8,11 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+      - "15692:15692"
     environment:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS: "-rabbitmq_prometheus"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     healthcheck:
@@ -67,6 +69,54 @@ services:
       POSTGRES_PASSWORD: notificationpass
     volumes:
       - notification_db_data:/var/lib/postgresql/data
+
+
+  prometheus:
+    image: prom/prometheus
+    container_name: saga-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infra/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+
+  grafana:
+      image: grafana/grafana
+      container_name: saga-grafana
+      ports:
+        - "3000:3000"
+      environment:
+        - GF_SECURITY_ADMIN_USER=admin
+        - GF_SECURITY_ADMIN_PASSWORD=admin
+      volumes:
+        - grafana_data:/var/lib/grafana
+
+  rabbitmq-exporter:
+    image: kbudde/rabbitmq-exporter
+    container_name: saga-rabbitmq-exporter
+    ports:
+      - "9419:9419"
+    environment:
+      RABBIT_URL: http://admin:admin@rabbitmq:15672
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter
+    container_name: saga-postgres-exporter
+    ports:
+      - "9187:9187"
+    environment:
+      DATA_SOURCE_NAME: "postgresql://orderuser:orderpass@order-db:5432/orderdb?sslmode=disable"
+    depends_on:
+      - order-db
+      - payment-db
+      - inventory-db
+      - notification-db
+
+
 
   # Services
 #  order-service:
@@ -170,6 +220,7 @@ volumes:
   payment_db_data:
   inventory_db_data:
   notification_db_data:
+  grafana_data:
 
 networks:
   default:

@@ -38,11 +38,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
-  endpoint:
-    health:
-      show-details: always
-
+        include: health,info,prometheus,trace # possibly additional
+  metrics:
+    tags:
+      application: ${spring.application.name}
 logging:
   level:
     com.saga: DEBUG

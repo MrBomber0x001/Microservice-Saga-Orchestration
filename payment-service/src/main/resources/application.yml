@@ -37,7 +37,10 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,prometheus,trace # possibly additional
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 logging:
   level:
