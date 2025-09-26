@@ -1,13 +1,15 @@
 package com.saga.core.events;
 
+import java.math.BigDecimal;
+
 public class PaymentProcessedEvent extends BaseEvent {
     private String paymentId;
-    private double amount;
+    private BigDecimal amount;
 
     public PaymentProcessedEvent() {
     }
 
-    public PaymentProcessedEvent(String sagaId, String orderId, String paymentId, double amount) {
+    public PaymentProcessedEvent(String sagaId, String orderId, String paymentId, BigDecimal amount) {
         super(sagaId, orderId);
         this.paymentId = paymentId;
         this.amount = amount;
@@ -21,11 +23,11 @@ public class PaymentProcessedEvent extends BaseEvent {
         this.paymentId = paymentId;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 }

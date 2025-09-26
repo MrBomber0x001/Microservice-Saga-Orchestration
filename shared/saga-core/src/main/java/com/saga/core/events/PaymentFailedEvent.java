@@ -1,23 +1,25 @@
 package com.saga.core.events;
 
+import java.math.BigDecimal;
+
 public class PaymentFailedEvent extends BaseEvent {
-    private double amount;
+    private BigDecimal amount;
     private String reason;
 
     public PaymentFailedEvent() {
     }
 
-    public PaymentFailedEvent(String sagaId, String orderId, double amount, String reason) {
+    public PaymentFailedEvent(String sagaId, String orderId, BigDecimal amount, String reason) {
         super(sagaId, orderId);
         this.amount = amount;
         this.reason = reason;
     }
 
-    public double getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
