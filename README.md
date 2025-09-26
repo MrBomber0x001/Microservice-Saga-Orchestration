@@ -3,6 +3,9 @@ This project demonstrates a complete implementation of the Saga Orchestration Pa
 
 ## Architecture
 
+![img_2_2.png](./assets/diagram-services.png)
+
+
 ### Services
 - Order Service (Port 8080) - Creates orders and orchestrates sagas
 - Payment Service (Port 8081) - Processes payments and handles refunds
@@ -16,6 +19,12 @@ This project demonstrates a complete implementation of the Saga Orchestration Pa
 - Flyway - Database migration management
 - Spring Boot Actuator - Health checks and monitoring
 - Promosthues and Grafana - (RabbitMQ, Postgres, App services) Monitoring
+
+## Service-to-Service communiation
+This chart illustrates service to service communication for success and failure cases
+
+![img_2_2.png](./assets/diagram-service.png)
+
 
 ## Saga Flow
 ### Happy Path
@@ -213,22 +222,22 @@ response
 #### Failure at any given point
 and In DB, the saga state, order and inventory as following
 order is still pending due to negative amount 
-![img_4.png](img_4.png)
+![img_4.png](assets/img_4.png)
 
 and saga transaction state is `COMPENSATING` at `PROCESS_PAYMENT` step.
 
-![img_5.png](img_5.png)
+![img_5.png](assets/img_5.png)
 
 
 #### Success
 Saga is completed
-![img_1.png](img_1.png)
+![img_1_1.png](./assets/img_1_1.png)
 
 order is completed
-![img_2.png](img_2.png)
+![img_2_2.png](./assets/img_2_2.png)
 
 and payment is processed
-![img_3.png](img_3.png)
+![img_3_3.png](./assets/img_3_3.png)
 
 
 ## TODO:
