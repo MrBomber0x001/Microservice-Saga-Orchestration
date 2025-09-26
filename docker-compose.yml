@@ -1,0 +1,176 @@
+version: '3.8'
+
+services:
+  # Infrastructure
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: saga-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Databases
+  order-db:
+    image: postgres:15
+    container_name: saga-order-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: orderdb
+      POSTGRES_USER: orderuser
+      POSTGRES_PASSWORD: orderpass
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+
+  payment-db:
+    image: postgres:15
+    container_name: saga-payment-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: paymentdb
+      POSTGRES_USER: paymentuser
+      POSTGRES_PASSWORD: paymentpass
+    volumes:
+      - payment_db_data:/var/lib/postgresql/data
+
+  inventory-db:
+    image: postgres:15
+    container_name: saga-inventory-db
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_DB: inventorydb
+      POSTGRES_USER: inventoryuser
+      POSTGRES_PASSWORD: inventorypass
+    volumes:
+      - inventory_db_data:/var/lib/postgresql/data
+
+  notification-db:
+    image: postgres:15
+    container_name: saga-notification-db
+    ports:
+      - "5435:5432"
+    environment:
+      POSTGRES_DB: notificationdb
+      POSTGRES_USER: notificationuser
+      POSTGRES_PASSWORD: notificationpass
+    volumes:
+      - notification_db_data:/var/lib/postgresql/data
+
+  # Services
+#  order-service:
+#    build:
+#      context: ./order-service
+#      dockerfile: Dockerfile
+#    container_name: saga-order-service
+#    ports:
+#      - "8080:8080"
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      DATABASE_URL: jdbc:postgresql://order-db:5432/orderdb
+#      DATABASE_USERNAME: orderuser
+#      DATABASE_PASSWORD: orderpass
+#      RABBITMQ_HOST: rabbitmq
+#      RABBITMQ_PORT: 5672
+#      RABBITMQ_USERNAME: admin
+#      RABBITMQ_PASSWORD: admin
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+#      order-db:
+#        condition: service_started
+#    restart: unless-stopped
+#
+#  payment-service:
+#    build:
+#      context: ./payment-service
+#      dockerfile: Dockerfile
+#    container_name: saga-payment-service
+#    ports:
+#      - "8081:8081"
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SERVER_PORT: 8081
+#      DATABASE_URL: jdbc:postgresql://payment-db:5432/paymentdb
+#      DATABASE_USERNAME: paymentuser
+#      DATABASE_PASSWORD: paymentpass
+#      RABBITMQ_HOST: rabbitmq
+#      RABBITMQ_PORT: 5672
+#      RABBITMQ_USERNAME: admin
+#      RABBITMQ_PASSWORD: admin
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+#      payment-db:
+#        condition: service_started
+#    restart: unless-stopped
+#
+#  inventory-service:
+#    build:
+#      context: ./inventory-service
+#      dockerfile: Dockerfile
+#    container_name: saga-inventory-service
+#    ports:
+#      - "8082:8082"
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SERVER_PORT: 8082
+#      DATABASE_URL: jdbc:postgresql://inventory-db:5432/inventorydb
+#      DATABASE_USERNAME: inventoryuser
+#      DATABASE_PASSWORD: inventorypass
+#      RABBITMQ_HOST: rabbitmq
+#      RABBITMQ_PORT: 5672
+#      RABBITMQ_USERNAME: admin
+#      RABBITMQ_PASSWORD: admin
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+#      inventory-db:
+#        condition: service_started
+#    restart: unless-stopped
+#
+#  notification-service:
+#    build:
+#      context: ./notification-service
+#      dockerfile: Dockerfile
+#    container_name: saga-notification-service
+#    ports:
+#      - "8083:8083"
+#    environment:
+#      SPRING_PROFILES_ACTIVE: docker
+#      SERVER_PORT: 8083
+#      DATABASE_URL: jdbc:postgresql://notification-db:5432/notificationdb
+#      DATABASE_USERNAME: notificationuser
+#      DATABASE_PASSWORD: notificationpass
+#      RABBITMQ_HOST: rabbitmq
+#      RABBITMQ_PORT: 5672
+#      RABBITMQ_USERNAME: admin
+#      RABBITMQ_PASSWORD: admin
+#    depends_on:
+#      rabbitmq:
+#        condition: service_healthy
+#      notification-db:
+#        condition: service_started
+#    restart: unless-stopped
+
+volumes:
+  rabbitmq_data:
+  order_db_data:
+  payment_db_data:
+  inventory_db_data:
+  notification_db_data:
+
+networks:
+  default:
+    name: saga-network
