@@ -101,7 +101,7 @@ public class SagaRabbitConfig {
     public Binding sagaOrchestratorBinding() {
         return BindingBuilder.bind(sagaOrchestratorQueue())
                 .to(sagaExchange())
-                .with("saga.event.*");
+                .with("saga.event.#");
     }
 
     // Message converter
